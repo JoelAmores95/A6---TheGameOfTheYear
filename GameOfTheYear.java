@@ -12,6 +12,10 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 import java.util.Arrays;
@@ -115,9 +119,17 @@ public class GameOfTheYear extends JFrame {
 			frame.add(label);
 			frame.setVisible(true);
 
+			if (puntuacionActual > maximaPuntuacion) {
+				maximaPuntuacion = puntuacionActual;
+				txtRecord.setText(Integer.toString(maximaPuntuacion));
+				guardarRecordEnArchivo(maximaPuntuacion); // Llamada al método para guardar el récord en el archivo
+			}
+
 			puntuacionActual = 0;
 			txtPuntuacion.setText(Integer.toString(puntuacionActual));
+
 		}
+
 	}
 
 	private JButton crearBotonSalir() {
@@ -131,10 +143,40 @@ public class GameOfTheYear extends JFrame {
 		return btnSalir;
 	}
 
+	public void guardarRecordEnArchivo(int record) {
+		try {
+			FileWriter writer = new FileWriter("record.txt");
+			writer.write(Integer.toString(record));
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int leerRecordDesdeArchivo() {
+		int record = 0;
+		try {
+			FileReader reader = new FileReader("record.txt");
+			BufferedReader br = new BufferedReader(reader);
+			String recordString = br.readLine();
+			if (recordString != null) {
+				record = Integer.parseInt(recordString);
+			}
+			br.close();
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return record;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
 	public GameOfTheYear() {
+
+		// Llamada al método para leer la puntuación máxima desde el archivo
+		maximaPuntuacion = leerRecordDesdeArchivo();
 
 		setTitle("Game Of The Year GOTY");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -215,6 +257,9 @@ public class GameOfTheYear extends JFrame {
 
 		contentPane.add(txtRecord);
 		txtRecord.setColumns(10);
+
+		// Establecer el valor del JTextField de la puntuación máxima
+		txtRecord.setText(Integer.toString(maximaPuntuacion));
 
 	}
 

@@ -14,7 +14,6 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -57,7 +56,7 @@ public class GameOfTheYear extends JFrame {
 				// Cambiar el texto del botón
 				if (!partidaIniciada) {
 					partidaIniciada = true;
-					btnReiniciar.setText("Reiniciar Partida");
+					btnReiniciar.setText("Reiniciar Pantalla");
 				}
 
 				// Habilitar las casillas
@@ -78,8 +77,6 @@ public class GameOfTheYear extends JFrame {
 				// Mezclar los elementos de la lista de símbolos
 				Collections.shuffle(Arrays.asList(copiaSimbolos));
 
-				puntuacionActual = 0;
-				txtPuntuacion.setText(Integer.toString(puntuacionActual));
 			}
 		});
 
@@ -118,6 +115,8 @@ public class GameOfTheYear extends JFrame {
 			frame.add(label);
 			frame.setVisible(true);
 
+			puntuacionActual = 0;
+			txtPuntuacion.setText(Integer.toString(puntuacionActual));
 		}
 	}
 
@@ -136,6 +135,7 @@ public class GameOfTheYear extends JFrame {
 	 * Create the frame.
 	 */
 	public GameOfTheYear() {
+
 		setTitle("Game Of The Year GOTY");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 454, 200);
@@ -217,4 +217,5 @@ public class GameOfTheYear extends JFrame {
 		txtRecord.setColumns(10);
 
 	}
+
 }

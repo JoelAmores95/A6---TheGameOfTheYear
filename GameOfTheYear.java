@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -153,27 +154,49 @@ public class GameOfTheYear extends JFrame {
 		}
 	}
 
-	public int leerRecordDesdeArchivo() {
+
+	/**
+	 * Añado el ejercicio de controlar excepciones
+	 * @return
+	 * @throws RecordException
+	 */
+	public int leerRecordDesdeArchivo() throws RecordException {
 		int record = 0;
+		FileReader reader = null;
+		BufferedReader br = null;
 		try {
-			FileReader reader = new FileReader("record.txt");
-			BufferedReader br = new BufferedReader(reader);
+			reader = new FileReader("record.txt");
+			br = new BufferedReader(reader);
 			String recordString = br.readLine();
 			if (recordString != null) {
 				record = Integer.parseInt(recordString);
 			}
-			br.close();
-			reader.close();
+		} catch (FileNotFoundException e) {
+			throw new RecordException("No se ha encontrado el fichero record.txt.");
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RecordException("No se ha podido leer el contenido del fichero record.txt.");
+		} catch (NumberFormatException e) {
+			throw new RecordException("El contenido del fichero record.txt no es un entero válido.");
+		} finally {
+			try {
+				if (br != null) {
+					br.close();
+				}
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				System.err.println("No se ha podido cerrar el fichero record.txt.");
+			}
 		}
 		return record;
 	}
-	
+
 	/**
 	 * Create the frame.
+	 * @throws RecordException
 	 */
-	public GameOfTheYear() {
+	public GameOfTheYear() throws RecordException {
 
 		// Llamada al método para leer la puntuación máxima desde el archivo
 		maximaPuntuacion = leerRecordDesdeArchivo();
